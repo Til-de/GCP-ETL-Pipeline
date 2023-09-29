@@ -1,0 +1,25 @@
+[
+    {"name": "id", "type": "STRING", "mode": "REQUIRED"},
+    {"name": "createdAt", "type": "TIMESTAMP", "mode": "NULLABLE"},
+    {"name": "updatedAt", "type": "TIMESTAMP", "mode": "NULLABLE"},
+    {"name": "app_id", "type": "STRING", "mode": "NULLABLE"},
+    {"name": "customer_id", "type": "STRING", "mode": "NULLABLE"},
+    {"name":  "customerJourneySummary", "type":  "RECORD", "mode":  "NULLABLE", "fields": [
+        {"name": "daysToConversion", "type": "INTEGER", "mode": "NULLABLE"},
+        {"name": "customerOrderIndex", "type": "INTEGER", "mode": "NULLABLE"},
+        {"name": "momentsCount", "type": "INTEGER", "mode": "NULLABLE"},
+        {"name": "firstVisit", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "lastVisit", "type": "STRING", "mode": "NULLABLE"}
+    ]},
+    {"name": "totalPrice", "type": "FLOAT", "mode": "NULLABLE"},
+    {"name": "subtotalPrice", "type": "FLOAT", "mode": "NULLABLE"},
+    {"name": "totalDiscounts", "type": "FLOAT", "mode": "NULLABLE"},
+    {"name": "totalRefunded", "type": "FLOAT", "mode": "NULLABLE"},
+    {"name": "subtotalLineItemsQuantity", "type": "INTEGER", "mode": "NULLABLE"},
+    {"name": "cancelledAt", "type": "TIMESTAMP", "mode": "NULLABLE"},
+    {"name": "cancelReason", "type": "STRING", "mode": "NULLABLE"},
+    {"name": "closed", "type": "BOOLEAN", "mode": "NULLABLE"},
+    {"name": "closedAt", "type": "TIMESTAMP", "mode": "NULLABLE"},
+    {"name": "email", "type": "STRING", "mode": "NULLABLE"},
+    {"name": "presentmentCurrencyCode", "type": "STRING", "mode": "NULLABLE"}
+]

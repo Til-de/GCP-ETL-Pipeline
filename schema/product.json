@@ -1,0 +1,51 @@
+[
+  {"name": "id", "type": "STRING", "mode": "REQUIRED"},
+  {"name": "createdAt", "type": "TIMESTAMP", "mode": "NULLABLE"},
+  {"name": "updatedAt", "type": "TIMESTAMP", "mode": "NULLABLE"},
+  {"name": "title", "type": "STRING", "mode": "NULLABLE"},
+  {"name": "productType", "type": "STRING", "mode": "NULLABLE"},
+  {"name": "totalInventory", "type": "INTEGER", "mode": "NULLABLE"},
+  {"name": "publishedAt", "type": "TIMESTAMP", "mode": "NULLABLE"},
+  {"name": "mediaCount", "type": "INTEGER", "mode": "NULLABLE"},
+  {
+    "name": "options",
+    "type": "RECORD",
+    "mode": "REPEATED",
+    "fields": [
+      {"name": "id", "type": "STRING", "mode": "REQUIRED"},
+      {"name": "name", "type": "STRING", "mode": "NULLABLE"},
+      {"name": "position", "type": "INTEGER", "mode": "NULLABLE"},
+      {"name": "values", "type": "STRING", "mode": "REPEATED"}
+    ]
+  },
+  {
+    "name": "priceRangeV2",
+    "type": "RECORD",
+    "mode": "NULLABLE",
+    "fields": [
+      {
+        "name": "minVariantPrice",
+        "type": "RECORD",
+        "mode": "NULLABLE",
+        "fields": [
+          {"name": "amount", "type": "FLOAT", "mode": "NULLABLE"},
+          {"name": "currencyCode", "type": "STRING", "mode": "NULLABLE"}
+        ]
+      },
+      {
+        "name": "maxVariantPrice",
+        "type": "RECORD",
+        "mode": "NULLABLE",
+        "fields": [
+          {"name": "amount", "type": "FLOAT", "mode": "NULLABLE"},
+          {"name": "currencyCode", "type": "STRING", "mode": "NULLABLE"}
+        ]
+      }
+    ]
+  },
+  {
+    "name": "variants",
+    "type": "STRING",
+    "mode": "REPEATED"
+  }
+]

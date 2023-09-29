@@ -1,0 +1,13 @@
+[
+  {"name": "__parentId", "type": "STRING", "mode": "REQUIRED"},
+  {"name": "allocationMethod", "type": "STRING", "mode": "NULLABLE"},
+  {"name": "index", "type": "INTEGER", "mode": "NULLABLE"},
+  {"name": "targetSelection", "type": "STRING", "mode": "NULLABLE"},
+  {"name": "targetType", "type": "STRING", "mode": "NULLABLE"},
+  {"name": "value", "type": "RECORD", "mode": "NULLABLE",
+    "fields": [
+      {"name": "amount", "type": "FLOAT", "mode": "NULLABLE"},
+      {"name": "currencyCode", "type": "STRING", "mode": "NULLABLE"}
+    ]
+  }
+]
