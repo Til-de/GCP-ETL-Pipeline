@@ -10,3 +10,13 @@ GRAPH_ENDPOINT = f"https://{os.getenv('SHOP_DOMAIN')}/admin/api/{os.getenv('SHOP
 TENANT_NAME = 'no_maintenance'
 DATASET_ID = f"{PROJECT_ID}.{TENANT_NAME}"
 SHOPIFY_ACCESS_TOKEN = os.getenv('SHOPIFY_ACCESS_TOKEN')
+
+
+SHOP_TABLES = {
+    "ORDERS": "shopify_orders",
+    "CUSTOMERS": "shopify_customers",
+    "CUSTOMER_VISITS": "shopify_customer_visits",
+    "PRODUCTS": "shopify_products",
+    "PRODUCT_VARIANTS": "shopify_product_variants",
+    "SHOPIFY_DISCOUNT_APPLICATIONS": "shopify_discount_applications"
+}

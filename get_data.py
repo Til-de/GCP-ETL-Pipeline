@@ -1,5 +1,4 @@
 import json
-import os
 import time
 from urllib.request import urlopen
 
@@ -20,8 +19,7 @@ def get_bulk_data_url(query):
             "subquery": query
         }
     })
-    # requests lib is used to send the query
-    print("response status code: ", response.status_code)
+    print("response status code for BulkOperationRunQuery:", response.status_code)
 
     if response.status_code == 200:
         op_id = response.json()["data"]["bulkOperationRunQuery"]["bulkOperation"]["id"]
@@ -34,9 +32,11 @@ def get_bulk_data_url(query):
             json_data = op_state.json()
             status = json_data['data']['node']['status']
             errorcode = json_data['data']['node']['errorCode']
-            print(errorcode)
+            if errorcode is not None:
+                print(f"Shopify BulkOperationRunQuery error:{errorcode}")
             if status == "COMPLETED":
                 url = json_data['data']['node']['url']
+                print(f"BulkOperationRunQuery complete. See,\n {url}")
                 return url
             time.sleep(30)
     else:
@@ -44,10 +44,13 @@ def get_bulk_data_url(query):
 
 
 def upload_batch(client, table_ref, batch):
+    print(f"uploading {len(batch)} records to {table_ref.dataset_id}.{table_ref.table_id} ...")
     """Uploads a batch of rows to a specified table and returns any errors encountered"""
     errors = client.insert_rows_json(table_ref, batch)
     if errors:
         print(f'Encountered errors while inserting rows to {table_ref.table_id}: {errors}')
+    else:
+        print(f"{len(batch)} successfully uploaded to {table_ref.dataset_id}.{table_ref.table_id}")
     return errors
 
 
@@ -58,8 +61,8 @@ def get_products(dataset_ref, client=bigquery_connection()):
 
     products = []
     variants = []
-    products_table_ref = bigquery.TableReference(dataset_ref, f"shopify_products")
-    variants_table_ref = bigquery.TableReference(dataset_ref, f"shopify_product_variants")
+    products_table_ref = bigquery.TableReference(dataset_ref, "shopify_products")
+    variants_table_ref = bigquery.TableReference(dataset_ref, "shopify_product_variants")
 
     # Since Shopify's bulk operation flattens the GQL response, there are two types of objects:
     # product & products variants
@@ -91,7 +94,7 @@ def get_products(dataset_ref, client=bigquery_connection()):
 
 def get_customers(dataset_ref, client=bigquery_connection()):
     url = get_bulk_data_url(GET_ALL_CUSTOMERS_QUERY)
-    table_ref = bigquery.TableReference(dataset_ref, f"shopify_customers")
+    table_ref = bigquery.TableReference(dataset_ref, "shopify_customers")
 
     bulk_op_res = urlopen(url)
     json_data = bulk_op_res.read().decode('utf-8', 'replace')
@@ -112,40 +115,65 @@ def get_customers(dataset_ref, client=bigquery_connection()):
     upload_batch(client, table_ref, batch)
 
 
+class TxBatch:
+    def __init__(self, table_ref, batch_size=1000):
+        self.contents = []
+        self.table_ref = table_ref
+        self.batch_size = batch_size
+
+
+def unpack_nested_id(row: object, prop):
+    if row[prop]:
+        id = row[prop]["id"]
+        row[prop] = id
+
+
+def unpack_money_v2(row:dict, prop:str):
+    if row[prop]:
+        if row[prop]["shopMoney"]:
+            row[prop] = row[prop]["shopMoney"]["amount"]
+        elif row[prop]["presentmentMoney"]:
+            row[prop] = row[prop]["presentmentMoney"]["amount"]
+
 
 def get_orders(dataset_ref, client):
     # url = get_bulk_data_url(GET_ALL_ORDERS_QUERY)
-    url = "https://storage.googleapis.com/shopify-tiers-assets-prod-us-east1/7eypgm4ib5cdq8zm5afq79pyd6ak?GoogleAccessId=assets-us-prod%40shopify-tiers.iam.gserviceaccount.com&Expires=1696607847&Signature=iW8FUEYjQ32dYOFVblETGr%2BzvXW57pgInmputJ4VOL0c72NfF%2FL4QXiH3wfYkMiBET5lNzId1Kb47YBWON3KkgMm67ie%2F0kzCMVpDdY7WN%2BnSU8rOYP%2BGuofg%2FwH7pqnuKOZoxHkSlM%2BpD8IeG6wmit0YyVMCzNs844Hgc%2FkZeJ6Luk7kP3wv8SZifRkVXtXXexV5MGjNbyzoLBRvUpPTUzbamJzOvDK0Wwo5a0yG2IcL31reTK5mUmJKJHM5Q%2Bi5lb%2FspKzOBav9xBRI17qCAfbZxZLNTTVh6kPKgROQ%2FyQrEOfO%2FuHAX29lCfThtVJ1fYeq7IqDtKPG4k3a0Iakw%3D%3D&response-content-disposition=attachment%3B+filename%3D%22bulk-3658532192494.jsonl%22%3B+filename%2A%3DUTF-8%27%27bulk-3658532192494.jsonl&response-content-type=application%2Fjsonl"
+    url = "https://storage.googleapis.com/shopify-tiers-assets-prod-us-east1/9hct4202judli655b0owhyaecsaz?GoogleAccessId=assets-us-prod%40shopify-tiers.iam.gserviceaccount.com&Expires=1696736254&Signature=AxWAWscYJT%2B3TsYuKWUHv4OQfSBK0pUVucus%2Bl6uisloIV5lTC0vh89F%2FKyo3jEHDrW7ZrlQN%2ByJ115xCOOasG0GfHkU7suDZiOPkLa09JSa1aIbSDW%2FvU%2BlfXIFVoKoY5uWC6VDoUEZ%2FsVKtgzhwE1j6vCUnHnqXgwzY3YZ2NqrKi%2BL1bwzmUaom3BJpl%2F4NN%2BW%2FRvOWr9KPso%2BXqTCNIx93n7PbMfTc%2FHqV4lwmfpoD6%2B3nhmVDlsN1rt8yTXMldH2N92C0ce6Fk%2FGzobqnq7vQxrqD5eTr30bqIuEfQRSO%2FMvhhsOZBvrj8VibpIikv2Q1TWuX7bf0q4djQwSqg%3D%3D&response-content-disposition=attachment%3B+filename%3D%22bulk-3663370420462.jsonl%22%3B+filename%2A%3DUTF-8%27%27bulk-3663370420462.jsonl&response-content-type=application%2Fjsonl"
+
     bulk_op_res = urlopen(url)
     json_data = bulk_op_res.read().decode('utf-8', 'replace')
 
-    orders = []
-    customer_visits = []
-    discount_applications = []
-    orders_table = bigquery.TableReference(dataset_ref, f"shopify_orders")
-    customer_visits = bigquery.TableReference(dataset_ref, f"shopify_customer_visits")
-    orders_table = bigquery.TableReference(dataset_ref, f"shopify_discount_application")
-
-
-    tmp_product_ref = None
+    orders = TxBatch(bigquery.TableReference(dataset_ref, "shopify_orders"))
+    customer_visits = TxBatch(bigquery.TableReference(dataset_ref, "shopify_customer_visits"))
+    discount_applications = TxBatch(bigquery.TableReference(dataset_ref, "shopify_discount_applications"))
     for line in json_data.splitlines():
-        row_json = json.loads(line)
+        row = json.loads(line)
 
         # Determine the appropriate batch and table_ref based on the presence of '__parentId'
-        if '__parentId' in row_json:
-            batch = variants
-            if tmp_product_ref:
-                tmp_product_ref["variants"].append(row_json["id"])
-        else:
-            batch = products
-            tmp_product_ref = row_json
-            tmp_product_ref["variants"] = []
-
-        # Add the row to the appropriate batch
-        batch.append(row_json)
-
-    if products:
-        upload_batch(client, products_table_ref, products)
-
-    if variants:
-        upload_batch(client, variants_table_ref, variants)
+        match row["__typename"]:
+            case "Order":
+                batch = orders
+                unpack_nested_id(row, "app")
+                unpack_nested_id(row, "customer")
+                unpack_money_v2(row, "subtotalPriceSet")
+                unpack_money_v2(row, "totalPriceSet")
+                unpack_money_v2(row, "totalDiscountsSet")
+                unpack_money_v2(row, "totalRefundedSet")
+                for line in row["taxLines"]:
+                    unpack_money_v2(line, "priceSet")
+            case "CustomerVisit":
+                batch = customer_visits
+            case "DiscountCodeApplication" | "ManualDiscountApplication" | "AutomaticDiscountApplication":
+                batch = discount_applications
+            case _:
+                print(f"no routine found in get_orders() to handle the following type:: {row['__typename']}")
+                print(row)
+        del row["__typename"]
+        batch.contents.append(row)
+        if len(batch.contents) >= batch.batch_size:
+            upload_batch(client, batch.table_ref, batch.contents)
+            # Clear the batch after uploading
+            batch.contents.clear()
+    for remaining in [orders, customer_visits, discount_applications]:
+        if remaining.contents:
+            upload_batch(client, remaining.table_ref, remaining.contents)

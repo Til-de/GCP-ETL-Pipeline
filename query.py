@@ -1,4 +1,3 @@
-
 BULK_OPERATION_RUN_QUERY = '''
 mutation bulk_product_query($subquery: String!)  {
   bulkOperationRunQuery(
@@ -15,8 +14,9 @@ mutation bulk_product_query($subquery: String!)  {
   }
 }
 '''
-GET_ALL_ORDERS_QUERY = """{
-  orders  {
+GET_ALL_ORDERS_QUERY = """
+{
+  orders {
     edges {
       node {
         __typename
@@ -92,9 +92,9 @@ GET_ALL_ORDERS_QUERY = """{
           }
         }
         subtotalPriceSet {
-         shopMoney {
-          amount
-        	} 
+          shopMoney {
+            amount
+          } 
         }
         taxLines {
           rate

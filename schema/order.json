@@ -2,19 +2,60 @@
     {"name": "id", "type": "STRING", "mode": "REQUIRED"},
     {"name": "createdAt", "type": "TIMESTAMP", "mode": "NULLABLE"},
     {"name": "updatedAt", "type": "TIMESTAMP", "mode": "NULLABLE"},
-    {"name": "app_id", "type": "STRING", "mode": "NULLABLE"},
-    {"name": "customer_id", "type": "STRING", "mode": "NULLABLE"},
+    {"name": "app", "type": "STRING", "mode": "NULLABLE"},
+    {"name": "customer", "type": "STRING", "mode": "NULLABLE"},
     {"name":  "customerJourneySummary", "type":  "RECORD", "mode":  "NULLABLE", "fields": [
         {"name": "daysToConversion", "type": "INTEGER", "mode": "NULLABLE"},
         {"name": "customerOrderIndex", "type": "INTEGER", "mode": "NULLABLE"},
         {"name": "momentsCount", "type": "INTEGER", "mode": "NULLABLE"},
-        {"name": "firstVisit", "type": "STRING", "mode": "NULLABLE"},
-        {"name": "lastVisit", "type": "STRING", "mode": "NULLABLE"}
+        {"name": "ready", "type": "BOOLEAN", "mode": "NULLABLE"},
+
+        {"name": "firstVisit", "type": "RECORD", "mode": "NULLABLE",
+            "fields": [
+                {"name": "id", "type": "STRING", "mode": "REQUIRED"},
+                {"name": "landingPage", "type": "STRING", "mode": "NULLABLE"},
+                {"name": "referrerUrl", "type": "STRING", "mode": "NULLABLE"},
+                {"name": "source", "type": "STRING", "mode": "NULLABLE"},
+                {"name": "sourceType", "type": "STRING", "mode": "NULLABLE"},
+                {"name": "utmParameters", "type": "RECORD", "mode": "NULLABLE", "fields": [
+                    {"name":  "campaign", "type": "STRING", "mode": "NULLABLE" },
+                    {"name":  "content", "type": "STRING", "mode": "NULLABLE" },
+                    {"name":  "medium", "type": "STRING", "mode": "NULLABLE" },
+                    {"name":  "source", "type": "STRING", "mode": "NULLABLE" },
+                    {"name":  "term", "type": "STRING", "mode": "NULLABLE" }
+                ]},
+                {"name": "marketingEvent", "type": "STRING", "mode": "NULLABLE"},
+                {"name": "occurredAt", "type": "TIMESTAMP", "mode": "NULLABLE"}
+            ]
+        },
+        {"name": "lastVisit", "type": "RECORD", "mode": "NULLABLE", "fields": [
+                {"name": "id", "type": "STRING", "mode": "REQUIRED"},
+                {"name": "landingPage", "type": "STRING", "mode": "NULLABLE"},
+                {"name": "referrerUrl", "type": "STRING", "mode": "NULLABLE"},
+                {"name": "source", "type": "STRING", "mode": "NULLABLE"},
+                {"name": "sourceType", "type": "STRING", "mode": "NULLABLE"},
+                {"name": "utmParameters", "type": "RECORD", "mode": "NULLABLE", "fields": [
+                    {"name":  "campaign", "type": "STRING", "mode": "NULLABLE" },
+                    {"name":  "content", "type": "STRING", "mode": "NULLABLE" },
+                    {"name":  "medium", "type": "STRING", "mode": "NULLABLE" },
+                    {"name":  "source", "type": "STRING", "mode": "NULLABLE" },
+                    {"name":  "term", "type": "STRING", "mode": "NULLABLE" }
+                ]},
+                {"name": "marketingEvent", "type": "STRING", "mode": "NULLABLE"},
+                {"name": "occurredAt", "type": "TIMESTAMP", "mode": "NULLABLE"}
+            ]
+        }
     ]},
-    {"name": "totalPrice", "type": "FLOAT", "mode": "NULLABLE"},
-    {"name": "subtotalPrice", "type": "FLOAT", "mode": "NULLABLE"},
-    {"name": "totalDiscounts", "type": "FLOAT", "mode": "NULLABLE"},
-    {"name": "totalRefunded", "type": "FLOAT", "mode": "NULLABLE"},
+    {"name": "totalPriceSet", "type": "FLOAT", "mode": "NULLABLE"},
+    {"name": "subtotalPriceSet", "type": "FLOAT", "mode": "NULLABLE"},
+    {"name": "totalDiscountsSet", "type": "FLOAT", "mode": "NULLABLE"},
+    {"name": "totalRefundedSet", "type": "FLOAT", "mode": "NULLABLE"},
+    {"name":  "taxLines", "type": "RECORD", "mode":  "REPEATED",
+        "fields": [
+            {"name": "rate", "type": "FLOAT", "mode": "NULLABLE"},
+            {"name": "priceSet", "type": "FLOAT", "mode": "NULLABLE"}
+        ]
+    },
     {"name": "subtotalLineItemsQuantity", "type": "INTEGER", "mode": "NULLABLE"},
     {"name": "cancelledAt", "type": "TIMESTAMP", "mode": "NULLABLE"},
     {"name": "cancelReason", "type": "STRING", "mode": "NULLABLE"},

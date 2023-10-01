@@ -17,26 +17,31 @@ def main():
     create_dataset(client)
     dataset_ref = bigquery.DatasetReference(client.project, TENANT_NAME)
     # init_products(client, dataset_ref)
-    # init_customers(client, dataset_ref)
+    init_customers(client, dataset_ref)
     init_orders(client, dataset_ref)
+
+def migrate():
+    client = bigquery_connection()
+    create_dataset(client)
+    dataset = bigquery.DatasetReference(client.project, TENANT_NAME)
+    create_table(client, dataset, 'shopify_products', 'schema/product.json')
+    create_table(client, dataset, 'shopify_product_variants', 'schema/product_variant.json')
+    create_table(client, dataset, 'shopify_orders', 'schema/order.json')
+    create_table(client, dataset, 'shopify_customer_visits', 'schema/customer_visit.json')
+    create_table(client, dataset, 'shopify_discount_applications', 'schema/discount_application.json')
+    create_table(client, dataset, 'shopify_customers', 'schema/customers.json')
 
 
 def init_products(client, dataset):
-    create_table(client, dataset, 'shopify_products', 'schema/product.json')
-    create_table(client, dataset, 'shopify_product_variants', 'schema/product_variant.json')
     get_products(dataset, client)
 
 
 def init_orders(client, dataset):
-    create_table(client, dataset, 'shopify_orders', 'schema/order.json')
-    create_table(client, dataset, 'shopify_customer_visits', 'schema/customer_visit.json')
-    create_table(client, dataset, 'shopify_discount_applications', 'schema/discount_application.json')
 
     get_orders(dataset, client)
 
 
 def init_customers(client, dataset):
-    create_table(client, dataset, 'shopify_customers', 'schema/customers.json')
     get_customers(dataset, client)
 
 
@@ -47,7 +52,7 @@ def create_dataset(client: Client):
         # Raises google.api_core.exceptions.Conflict if the Dataset already
         # exists within the project.
         # @todo remove `exists_ok` after testing is complete
-        dataset = client.create_dataset(TENANT_NAME, timeout=30, exists_ok=True)
+        dataset = client.create_dataset(TENANT_NAME, timeout=30)
         print("Created dataset {}.{}".format(client.project, dataset.dataset_id))
         dataset.location = os.getenv('LOCATION')
 
@@ -60,7 +65,6 @@ def create_table(client: Client, dataset: Dataset, table_name: str, schema_path:
     # Read the schema from the JSON file
     with open(schema_path, 'r') as file:
         schema_json = json.load(file)
-        print(schema_json)
         schema = [SchemaField.from_api_repr(field) for field in schema_json]
 
     table = bigquery.Table(table_id, schema=schema)

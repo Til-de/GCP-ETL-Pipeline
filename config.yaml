@@ -1,0 +1,37 @@
+APP:
+  ENVIRONMENT: "test"
+  DEBUG: True
+
+BIGQUERY:
+  KEY: ""
+  TABLES:
+    ORDERS:
+      NAME: "shopify_orders"
+      SCHEMA: "schema/orders.json"
+    CUSTOMER_VISIT:
+      NAME: "shopify_customer_visits"
+      SCHEMA: "schema/customer_visits.json"
+    DISCOUNT_APPLICATION:
+      NAME: "shopify_discount_application"
+      SCHEMA: "schema/discount_application"
+    PRODUCTS:
+      NAME: "shopify_products"
+      SCHEMA: "schema/shopify_products"
+    PRODUCT_VARIANT:
+      NAME: "shopify_product_variants"
+      SCHEMA: "schema/shopify_products"
+    CUSTOMERS:
+      NAME: "shopify_customers"
+      SCHEMA: "schema/shopify_customers"
+
+
+SHOPIFY:
+  SHOP_NAME: ""
+  SHOP_API_VERSION: ""
+  ACCESS_TOKEN: ""
+  CHANNELS:
+    ORDERS: True
+    CUSTOMERS: True
+    PRODUCTS: True
+
+
