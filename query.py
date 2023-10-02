@@ -120,6 +120,13 @@ GET_ALL_ORDERS_QUERY = """
         closed
         closedAt
         presentmentCurrencyCode
+        shippingAddress {
+            countryCodeV2
+            provinceCode
+            latitude
+            longitude
+            city
+        }
         discountApplications(first: 10) {
           edges {
             node {

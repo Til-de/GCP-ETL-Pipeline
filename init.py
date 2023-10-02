@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 from constants import TENANT_NAME
 from get_data import get_products, get_customers, get_orders
-from lib.util import bigquery_connection
+from util import bigquery_connection
 
 load_dotenv()
 
@@ -16,7 +16,7 @@ def main():
     client = bigquery_connection()
     create_dataset(client)
     dataset_ref = bigquery.DatasetReference(client.project, TENANT_NAME)
-    # init_products(client, dataset_ref)
+    init_products(client, dataset_ref)
     init_customers(client, dataset_ref)
     init_orders(client, dataset_ref)
 
@@ -37,7 +37,6 @@ def init_products(client, dataset):
 
 
 def init_orders(client, dataset):
-
     get_orders(dataset, client)
 
 

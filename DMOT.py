@@ -1,11 +1,14 @@
+import json
 import os
 import time
 from abc import ABC, abstractmethod
 
 import requests
 from google.cloud import bigquery
-from google.cloud.bigquery import Client, Dataset
+from google.cloud.bigquery import Client, Dataset, SchemaField
 from google.oauth2 import service_account
+
+from util import kebab_case_to_snake_case
 
 
 class Extractor(ABC):
@@ -13,8 +16,9 @@ class Extractor(ABC):
         self.client = self._connect(token, project_id) if client is None else client
         self.dataset = self._get_dataset_reference()
         self.headers = {'X-Shopify-Access-Token': token, 'Content-Type': 'application/json'}
-        self.shop_name = shop_name
+        self.tenant = kebab_case_to_snake_case(shop_name)
         self.url = f"https://{shop_name}.myshopify.com/admin/api/{os.getenv('SHOP_API_VERSION')}/graphql.json"
+
 
     def set_dataset_reference(self, dataset_id):
         self.dataset = bigquery.DatasetReference(dataset_id)
@@ -26,7 +30,7 @@ class Extractor(ABC):
             # Raises google.api_core.exceptions.Conflict if the Dataset already
             # exists within the project.
             # @todo remove `exists_ok` after testing is complete
-            dataset = self.client.create_dataset(self.shop_name, timeout=30)
+            dataset = self.client.create_dataset(self.tenant, timeout=30)
             print("Created dataset {}.{}".format(self.client.project, dataset.dataset_id))
             dataset.location = os.getenv('LOCATION')
             return dataset
@@ -86,6 +90,8 @@ class Extractor(ABC):
             print(f"Table {table_id} created successfully.")
         except Exception as e:
             print(f"Error creating table {table_id}: {e}")
+
+
     def _get_bulk_operation_run_query_url(self, query):
         response = requests.post(url=self.url, headers=self.headers, json={
             "query": self.BULK_OPERATION_RUN_QUERY,

@@ -1,7 +1,7 @@
 # Custom
 sample_data/
 pk_*
-
+config.yaml
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

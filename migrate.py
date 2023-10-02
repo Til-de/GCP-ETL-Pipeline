@@ -1,6 +1,6 @@
 from constants import TENANT_NAME
 from init import create_table, create_dataset
-from lib.util import bigquery_connection
+from util import bigquery_connection
 
 from google.cloud import bigquery
 

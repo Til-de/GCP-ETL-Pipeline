@@ -6,7 +6,7 @@ import requests
 from google.cloud import bigquery
 
 from constants import GRAPH_ENDPOINT, SHOPIFY_ACCESS_TOKEN
-from lib.util import bigquery_connection
+from util import bigquery_connection
 from query import BULK_OPERATION_STATUS_BY_ID, GET_ALL_PRODUCTS_QUERY, BULK_OPERATION_RUN_QUERY, \
     GET_ALL_CUSTOMERS_QUERY, GET_ALL_ORDERS_QUERY
 
@@ -137,8 +137,7 @@ def unpack_money_v2(row:dict, prop:str):
 
 
 def get_orders(dataset_ref, client):
-    # url = get_bulk_data_url(GET_ALL_ORDERS_QUERY)
-    url = "https://storage.googleapis.com/shopify-tiers-assets-prod-us-east1/9hct4202judli655b0owhyaecsaz?GoogleAccessId=assets-us-prod%40shopify-tiers.iam.gserviceaccount.com&Expires=1696736254&Signature=AxWAWscYJT%2B3TsYuKWUHv4OQfSBK0pUVucus%2Bl6uisloIV5lTC0vh89F%2FKyo3jEHDrW7ZrlQN%2ByJ115xCOOasG0GfHkU7suDZiOPkLa09JSa1aIbSDW%2FvU%2BlfXIFVoKoY5uWC6VDoUEZ%2FsVKtgzhwE1j6vCUnHnqXgwzY3YZ2NqrKi%2BL1bwzmUaom3BJpl%2F4NN%2BW%2FRvOWr9KPso%2BXqTCNIx93n7PbMfTc%2FHqV4lwmfpoD6%2B3nhmVDlsN1rt8yTXMldH2N92C0ce6Fk%2FGzobqnq7vQxrqD5eTr30bqIuEfQRSO%2FMvhhsOZBvrj8VibpIikv2Q1TWuX7bf0q4djQwSqg%3D%3D&response-content-disposition=attachment%3B+filename%3D%22bulk-3663370420462.jsonl%22%3B+filename%2A%3DUTF-8%27%27bulk-3663370420462.jsonl&response-content-type=application%2Fjsonl"
+    url = get_bulk_data_url(GET_ALL_ORDERS_QUERY)
 
     bulk_op_res = urlopen(url)
     json_data = bulk_op_res.read().decode('utf-8', 'replace')

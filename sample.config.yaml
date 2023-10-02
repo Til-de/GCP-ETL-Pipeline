@@ -3,7 +3,13 @@ APP:
   DEBUG: True
 
 BIGQUERY:
+  # Used to authenticate requests to BQ
   KEY: ""
+  # Optional; The dataset name in BQ; Uses SHOPIFY.SHOP_NAME (converted to snake_case) if no option is provided.
+  TENANT_NAME: ""
+  # Location, or region for the GCP Dataset
+  LOCATION: "northamerica-northeast2"
+  # Table name and path to schema
   TABLES:
     ORDERS:
       NAME: "shopify_orders"
@@ -27,8 +33,10 @@ BIGQUERY:
 
 SHOPIFY:
   SHOP_NAME: ""
-  SHOP_API_VERSION: ""
+  SHOP_API_VERSION: "2023-07"
+   # Authenticates Shopify GraphQL Requests
   ACCESS_TOKEN: ""
+  # Specify which channels should be included in the data ingestion
   CHANNELS:
     ORDERS: True
     CUSTOMERS: True

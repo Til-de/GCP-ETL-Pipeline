@@ -62,5 +62,14 @@
     {"name": "closed", "type": "BOOLEAN", "mode": "NULLABLE"},
     {"name": "closedAt", "type": "TIMESTAMP", "mode": "NULLABLE"},
     {"name": "email", "type": "STRING", "mode": "NULLABLE"},
-    {"name": "presentmentCurrencyCode", "type": "STRING", "mode": "NULLABLE"}
+    {"name": "presentmentCurrencyCode", "type": "STRING", "mode": "NULLABLE"},
+    {"name":  "shippingAddress", "type": "RECORD", "mode": "NULLABLE",
+        "fields": [
+            {"name": "countryCodeV2", "type": "STRING", "mode": "NULLABLE"},
+            {"name": "city", "type": "STRING", "mode": "NULLABLE"},
+            {"name": "longitude", "type": "FLOAT", "mode": "NULLABLE"},
+            {"name": "latitude", "type": "FLOAT", "mode": "NULLABLE"},
+            {"name": "provinceCode", "type": "STRING", "mode": "NULLABLE"}
+        ]
+    }
 ]
