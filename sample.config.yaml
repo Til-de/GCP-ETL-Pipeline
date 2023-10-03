@@ -5,41 +5,55 @@ APP:
 BIGQUERY:
   # Used to authenticate requests to BQ
   KEY: ""
-  # Optional; The dataset name in BQ; Uses SHOPIFY.SHOP_NAME (converted to snake_case) if no option is provided.
+  PROJECT_NAME: ""
+  # Optional; snake_case; The dataset name in BQ; Uses SHOPIFY.SHOP_NAME (converted to snake_case) if no option is provided.
   TENANT_NAME: ""
   # Location, or region for the GCP Dataset
-  LOCATION: "northamerica-northeast2"
+  LOCATION: ""
   # Table name and path to schema
   TABLES:
-    ORDERS:
-      NAME: "shopify_orders"
-      SCHEMA: "schema/orders.json"
-    CUSTOMER_VISIT:
-      NAME: "shopify_customer_visits"
-      SCHEMA: "schema/customer_visits.json"
-    DISCOUNT_APPLICATION:
-      NAME: "shopify_discount_application"
-      SCHEMA: "schema/discount_application"
-    PRODUCTS:
-      NAME: "shopify_products"
-      SCHEMA: "schema/shopify_products"
-    PRODUCT_VARIANT:
-      NAME: "shopify_product_variants"
-      SCHEMA: "schema/shopify_products"
-    CUSTOMERS:
-      NAME: "shopify_customers"
-      SCHEMA: "schema/shopify_customers"
+
 
 
 SHOPIFY:
   SHOP_NAME: ""
-  SHOP_API_VERSION: "2023-07"
+  API_VERSION: "2023-07"
    # Authenticates Shopify GraphQL Requests
   ACCESS_TOKEN: ""
   # Specify which channels should be included in the data ingestion
-  CHANNELS:
-    ORDERS: True
-    CUSTOMERS: True
-    PRODUCTS: True
+  ENDPOINTS:
+    ORDERS:
+      ENABLED: True
+      TABLES:
+        ORDERS:
+          TYPENAME: "Order"
+          NAME: "shopify_orders"
+          SCHEMA: "schema/shopify_order.json"
+        CUSTOMER_VISITS:
+          TYPENAME: "CustomerVisit"
+          NAME: "shopify_customer_visits"
+          SCHEMA: "schema/shopify_customer_visit.json"
+        DISCOUNT_APPLICATIONS:
+          TYPENAME: [ "DiscountCodeApplication", "ManualDiscountApplication", "AutomaticDiscountApplication" ]
+          NAME: "shopify_discount_application"
+          SCHEMA: "schema/shopify_discount_application.json"
+    CUSTOMERS:
+      ENABLED: True
+      TABLES:
+        CUSTOMERS:
+          TYPENAME: "Customer"
+          NAME: "shopify_customers"
+          SCHEMA: "schema/shopify_customer.json"
+    PRODUCTS:
+      ENABLED: True
+      TABLES:
+        PRODUCTS:
+          TYPENAME: "Product"
+          NAME: "shopify_products"
+          SCHEMA: "schema/shopify_product.json"
+        PRODUCT_VARIANTS:
+          TYPENAME: "ProductVariant"
+          NAME: "shopify_product_variants"
+          SCHEMA: "schema/shopify_product_variant.json"
 
 

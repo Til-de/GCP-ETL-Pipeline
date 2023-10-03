@@ -42,10 +42,5 @@
         ]
       }
     ]
-  },
-  {
-    "name": "variants",
-    "type": "STRING",
-    "mode": "REPEATED"
   }
 ]

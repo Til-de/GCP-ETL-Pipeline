@@ -1,61 +1,77 @@
 import json
-import os
-import time
+import sys
 from abc import ABC, abstractmethod
+from typing import Union, List
 
-import requests
 from google.cloud import bigquery
-from google.cloud.bigquery import Client, Dataset, SchemaField
+from google.cloud.bigquery import Client, SchemaField
+from google.cloud.exceptions import NotFound
 from google.oauth2 import service_account
 
-from util import kebab_case_to_snake_case
+from errors import DatasetExistsError
+from util import get_file_from_project_root
 
 
-class Extractor(ABC):
-    def __init__(self, project_id, shop_name, token, client=None):
-        self.client = self._connect(token, project_id) if client is None else client
-        self.dataset = self._get_dataset_reference()
-        self.headers = {'X-Shopify-Access-Token': token, 'Content-Type': 'application/json'}
-        self.tenant = kebab_case_to_snake_case(shop_name)
-        self.url = f"https://{shop_name}.myshopify.com/admin/api/{os.getenv('SHOP_API_VERSION')}/graphql.json"
+class TableInfo:
+    def __init__(self, key: Union[str, List[str]], name: str, schema: str):
+        # Ensure key is always a list
+        self.key = key if isinstance(key, list) else [key]
+        self.name = name
+        self.schema = schema
 
 
-    def set_dataset_reference(self, dataset_id):
-        self.dataset = bigquery.DatasetReference(dataset_id)
+class DataModel(ABC):
+    def __init__(self, project_id, bq_token, location, tenant, client=None):
+        self.project_id = project_id
+        self.client = self._connect(bq_token, self.project_id) if client is None else client
+        self.tenant = tenant
+        self.location = location
+        print(f"tenant: {self.tenant}")
+        self.dataset_ref = self._set_dataset_reference(tenant)
 
-    def create_dataset(self):
+    def _set_dataset_reference(self, dataset_id: str):
+        return bigquery.DatasetReference(self.project_id, dataset_id)
+
+    def has_dataset(self):
+        try:
+            self.client.get_dataset(self.dataset_ref.dataset_id)  # Make an API request.
+            print("Dataset {} already exists".format(self.dataset_ref.dataset_id))
+            return True
+        except NotFound:
+            return False
+
+    def create_dataset(self, dataset_id=None):
         # Construct a BigQuery client object.
         try:
+            d_id = self.dataset_ref.dataset_id if dataset_id is None else dataset_id
             # Send the dataset to the API for creation, with an explicit timeout.
             # Raises google.api_core.exceptions.Conflict if the Dataset already
             # exists within the project.
-            # @todo remove `exists_ok` after testing is complete
-            dataset = self.client.create_dataset(self.tenant, timeout=30)
-            print("Created dataset {}.{}".format(self.client.project, dataset.dataset_id))
-            dataset.location = os.getenv('LOCATION')
+            dataset = self.client.create_dataset(d_id, timeout=30)
+            self.dataset_ref = dataset
+            print("Created dataset {}.{}".format(self.dataset_ref.project, self.dataset_ref.dataset_id))
+            dataset.location = self.location
             return dataset
-
-        except Exception as e:
-            print(f"Error: {str(e)}")
-    def _get_dataset_reference(self):
-        return bigquery.DatasetReference(self.client.project)
+        except DatasetExistsError as e:
+            print(e)
 
     @abstractmethod
-    def migrate(self):
+    def migrate(self, tables: List[TableInfo]):
         pass
 
-    def _connect(self, token, project_id):
+    def _connect(self, token, project_id) -> Client:
         credentials = service_account.Credentials.from_service_account_file(
-            token, scopes=["https://www.googleapis.com/auth/cloud-platform"]
+            get_file_from_project_root(token), scopes=["https://www.googleapis.com/auth/cloud-platform"]
         )
         client = bigquery.Client(project=project_id, credentials=credentials)
+        return client
 
     @abstractmethod
-    def get_data(self):
+    def get_data(self, query):
         pass
 
     @abstractmethod
-    def save_data(self):
+    def save_data(self, data, table):
         pass
 
     def insert_json_rows(self, table_ref, rows):
@@ -64,20 +80,17 @@ class Extractor(ABC):
             print(f"uploading {len(rows)} records to {table_ref.dataset_id}.{table_ref.table_id} ...")
             errors = self.client.insert_rows_json(table_ref, rows)
             if errors:
-                print(f'Encountered errors while inserting rows to {table_ref.table_id}: {errors}')
+                raise Exception(f"Encountered errors while inserting rows to {table_ref.table_id}: {errors}")
             else:
                 print(f"{len(rows)} successfully uploaded to {table_ref.dataset_id}.{table_ref.table_id}")
         except Exception as e:
             print(f'Encountered errors while inserting rows to {table_ref.table_id}: {errors}')
 
-
     def get_table_ref(self, table_id):
-        return bigquery.TableReference(self.dataset, table_id)
+        return bigquery.TableReference(self.dataset_ref, table_id)
 
-
-
-    def create_table(client: Client, dataset: Dataset, table_name: str, schema_path: str):
-        table_id = f"{dataset.project}.{dataset.dataset_id}.{table_name}"
+    def create_table(self, table_name: str, schema_path: str):
+        table_id = f"{self.dataset_ref.project}.{self.dataset_ref.dataset_id}.{table_name}"
         # Read the schema from the JSON file
         with open(schema_path, 'r') as file:
             schema_json = json.load(file)
@@ -86,35 +99,17 @@ class Extractor(ABC):
         table = bigquery.Table(table_id, schema=schema)
         # Create the table in BigQuery
         try:
-            client.create_table(table)
+            self.client.create_table(table)
             print(f"Table {table_id} created successfully.")
         except Exception as e:
             print(f"Error creating table {table_id}: {e}")
+            sys.exit(1)
 
 
-    def _get_bulk_operation_run_query_url(self, query):
-        response = requests.post(url=self.url, headers=self.headers, json={
-            "query": self.BULK_OPERATION_RUN_QUERY,
-            "variables": {
-                "subquery": query
-            }
-        })
-        print(f"response {response.status_code} for {self.name} BulkOperationRunQuery")
+class Transformer(ABC):
+    def __init__(self):
+        pass
 
-        # @TODO add error handling
-        if response.status_code == 200:
-            while True:
-                op_state = requests.post(url=self.url, headers=self.headers, json={
-                    "query": self.BULK_OPERATION_STATUS,
-                })
-                json_data = op_state.json()
-                status = json_data['data']['node']['status']
-                errorcode = json_data['data']['node']['errorCode']
-                if errorcode is not None:
-                    print(f"Shopify BulkOperationRunQuery error:{errorcode}")
-                if status == "COMPLETED":
-                    url = json_data['data']['node']['url']
-                    return url
-                time.sleep(self.POLL_INTERVAL_SECONDS)
-        else:
-            print("Query failed to run by returning code of {}.".format(response.status_code))
+    @abstractmethod
+    def process_batched_data(self, data):
+        pass

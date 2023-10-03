@@ -130,7 +130,7 @@ GET_ALL_ORDERS_QUERY = """
         discountApplications(first: 10) {
           edges {
             node {
-                __typename  
+              __typename  
               allocationMethod
               index
               targetSelection
@@ -157,6 +157,7 @@ query customers {
         customers {
             edges {
                 node {
+                    __typename
                     id
                     firstName
                     lastName
@@ -197,6 +198,7 @@ GET_ALL_PRODUCTS_QUERY = """{
         edges {
           node {
             id
+            __typename
             createdAt
             updatedAt
             title
@@ -223,6 +225,7 @@ GET_ALL_PRODUCTS_QUERY = """{
             variants (first:20) {
               edges {
                 node {
+                  __typename
                   sku
                   id
                   title
@@ -237,6 +240,20 @@ GET_ALL_PRODUCTS_QUERY = """{
       }
     }
     """
+BULK_OPERATION_STATUS = """
+{
+ currentBulkOperation {
+   id
+   status
+   errorCode
+   createdAt
+   completedAt
+   objectCount
+   fileSize
+   url
+   partialDataUrl
+ }
+}"""
 BULK_OPERATION_STATUS_BY_ID = """query BulkOperationStatusById($id: ID!) {
   node(id: $id) {
     ... on BulkOperation {
