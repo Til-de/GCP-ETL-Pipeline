@@ -7,11 +7,6 @@ Scripts for scheduled data ingestion into GCP from the following data sources:
 
 
 
-## Authors
-
-- [@therealchrisrock](https://www.github.com/therealchrisrock)
-
-
 
 ## Installation
 
@@ -34,3 +29,8 @@ To run a full data ingestion:
 ```bash
 python shopify/full_data_load.py
 ```
+
+## Authors
+
+- [@therealchrisrock](https://www.github.com/therealchrisrock)
+
