@@ -25,10 +25,17 @@ GET_ALL_ORDERS_QUERY = """
         processedAt
         updatedAt
         customerLocale
+        app
+        customer
+        email
+        note
+        tags
+        test
         customerJourneySummary {
             daysToConversion
             customerOrderIndex
             momentsCount
+            ready
             firstVisit {
                 id
                 landingPage
@@ -49,11 +56,11 @@ GET_ALL_ORDERS_QUERY = """
                     type
                     utmCampaign
                 }
+                occurredAt
             }
              lastVisit {
                 id
                 landingPage
-                occurredAt
                 referrerUrl
                 source
                 sourceType
@@ -70,6 +77,7 @@ GET_ALL_ORDERS_QUERY = """
                     type
                     utmCampaign
                 }
+                occurredAt
             }
             ready
             moments (first: 20) {
@@ -98,14 +106,6 @@ GET_ALL_ORDERS_QUERY = """
             amount
           } 
         }
-        taxLines {
-          rate
-          priceSet {
-            shopMoney {
-              amount
-            }
-          }
-        }
         totalDiscountsSet {
           shopMoney {
             amount
@@ -116,18 +116,28 @@ GET_ALL_ORDERS_QUERY = """
             amount
           }
         }
+        taxLines {
+          rate
+          priceSet {
+            shopMoney {
+              amount
+            }
+          }
+        }
         subtotalLineItemsQuantity
+        cartDiscountAmountSet
         cancelledAt
         cancelReason
         closed
         closedAt
+        currencyCode
         presentmentCurrencyCode
         shippingAddress {
             countryCodeV2
-            provinceCode
-            latitude
-            longitude
             city
+            longitude
+            latitude
+            provinceCode
         }
         discountApplications(first: 10) {
           edges {
@@ -277,6 +287,14 @@ GET_ALL_PRODUCTS_QUERY = """{
                   updatedAt
                 }
               }
+            }
+            shippingLine {
+                id
+                code
+                title
+                carrierIdentifier
+                originalPriceSet
+                taxLines
             }
           }
         }
