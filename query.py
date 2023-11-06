@@ -22,7 +22,9 @@ GET_ALL_ORDERS_QUERY = """
         __typename
         id
         createdAt
+        processedAt
         updatedAt
+        customerLocale
         customerJourneySummary {
             daysToConversion
             customerOrderIndex
@@ -159,23 +161,62 @@ query customers {
                 node {
                     __typename
                     id
+                    createdAt
+                    updatedAt
+                    lifetimeDuration
+                    locale
                     firstName
                     lastName
                     email
+                    validEmailAddress
                     phone
-                    addresses {
+                    tags
+                    state
+                    statistics
+                    market {
+                        id
+                        name
+                        handle
+                        enabled
+                        primary
+                    }
+                    taxExempt
+                    defaultAddress {
                         address1
                         address2
                         city
                         company
+                        coordinatesValidated
                         countryCodeV2
+                        country
                         latitude
                         longitude
                         province
                         provinceCode
                         timeZone
+                        zip
+                    }
+                    addresses {
+                        address1
+                        address2
+                        city
+                        company
+                        coordinatesValidated
+                        countryCodeV2
+                        country
+                        latitude
+                        longitude
+                        province
+                        provinceCode
+                        timeZone
+                        zip
                     }
                     emailMarketingConsent {
+                        consentUpdatedAt
+                        marketingState
+                        marketingOptInLevel
+                    }
+                    smsMarketingConsent {
                         consentUpdatedAt
                         marketingState
                         marketingOptInLevel
@@ -232,6 +273,8 @@ GET_ALL_PRODUCTS_QUERY = """{
                   inventoryQuantity
                   price
                   compareAtPrice
+                  availableForSale
+                  updatedAt
                 }
               }
             }
