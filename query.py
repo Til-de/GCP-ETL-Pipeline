@@ -25,12 +25,12 @@ GET_ALL_ORDERS_QUERY = """
         processedAt
         updatedAt
         customerLocale
-        app
-        customer
-        email
-        note
-        tags
-        test
+        app {
+          id
+        }
+        customer {
+          id
+        }
         customerJourneySummary {
             daysToConversion
             customerOrderIndex
@@ -50,17 +50,12 @@ GET_ALL_ORDERS_QUERY = """
                     source
                     term
                 }
-                marketingEvent {
-                    channel
-                    id
-                    type
-                    utmCampaign
-                }
                 occurredAt
             }
              lastVisit {
                 id
                 landingPage
+                occurredAt
                 referrerUrl
                 source
                 sourceType
@@ -70,12 +65,6 @@ GET_ALL_ORDERS_QUERY = """
                     medium
                     source
                     term
-                }
-                marketingEvent {
-                    channel
-                    id
-                    type
-                    utmCampaign
                 }
                 occurredAt
             }
@@ -89,6 +78,7 @@ GET_ALL_ORDERS_QUERY = """
                 }
             }
         }
+
         totalPriceSet {
           shopMoney {
             amount
@@ -104,7 +94,6 @@ GET_ALL_ORDERS_QUERY = """
             amount
           }
         }
-        discountCode
         totalRefundedSet {
           shopMoney {
             amount
@@ -119,31 +108,17 @@ GET_ALL_ORDERS_QUERY = """
           }
         }
         subtotalLineItemsQuantity
-        cartDiscountAmountSet
         cancelledAt
         cancelReason
         closed
         closedAt
-        currencyCode
         presentmentCurrencyCode
         shippingAddress {
             countryCodeV2
-            city
-            longitude
-            latitude
             provinceCode
-        }
-        shippingLine {
-            id
-            code
-            title
-            carrierIdentifier
-            originalPriceSet
-            taxLines {
-                priceSet
-                rate
-                ratePercentage
-            }
+            latitude
+            longitude
+            city
         }
         discountApplications(first: 10) {
           edges {
@@ -186,15 +161,9 @@ query customers {
                     email
                     validEmailAddress
                     phone
-                    tags
                     state
-                    statistics
-                    market {
-                        id
-                        name
-                        handle
-                        enabled
-                        primary
+                    statistics {
+                        predictedSpendTier
                     }
                     taxExempt
                     defaultAddress {
@@ -293,14 +262,6 @@ GET_ALL_PRODUCTS_QUERY = """{
                   updatedAt
                 }
               }
-            }
-            shippingLine {
-                id
-                code
-                title
-                carrierIdentifier
-                originalPriceSet
-                taxLines
             }
           }
         }

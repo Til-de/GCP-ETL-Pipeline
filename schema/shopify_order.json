@@ -1,15 +1,11 @@
 [
     {"name": "id", "type": "STRING", "mode": "REQUIRED"},
     {"name": "createdAt", "type": "TIMESTAMP", "mode": "NULLABLE"},
-    {"name": "processedAt", "type": "TIMESTAMP","mode": "NULLABLE"},
+    {"name": "processedAt", "type": "TIMESTAMP", "mode": "NULLABLE"},
     {"name": "updatedAt", "type": "TIMESTAMP", "mode": "NULLABLE"},
-    {"name": "customerLocale","type": "STRING","mode": "NULLABLE"},
+    {"name": "customerLocale", "type": "STRING", "mode": "NULLABLE"},
     {"name": "app", "type": "STRING", "mode": "NULLABLE"},
     {"name": "customer", "type": "STRING", "mode": "NULLABLE"},
-    {"name": "email", "type": "STRING", "mode": "NULLABLE"},
-    {"name": "note", "type": "STRING","mode": "NULLABLE"},
-    {"name": "tags", "type": "STRING","mode": "NULLABLE"},
-    {"name": "test", "type": "BOOLEAN","mode": "NULLABLE"},
     {"name":  "customerJourneySummary", "type":  "RECORD", "mode":  "NULLABLE", "fields": [
         {"name": "daysToConversion", "type": "INTEGER", "mode": "NULLABLE"},
         {"name": "customerOrderIndex", "type": "INTEGER", "mode": "NULLABLE"},
@@ -29,15 +25,6 @@
                     {"name":  "source", "type": "STRING", "mode": "NULLABLE" },
                     {"name":  "term", "type": "STRING", "mode": "NULLABLE" }
                 ]},
-                {"name": "marketingEvent", "type": "STRING", "mode": "NULLABLE",
-                    "fields": [
-                        {"name": "channel", "type": "STRING", "mode": "NULLABLE"},
-                        {"name": "id","type": "STRING", "mode": "NULLABLE"},
-                        {"name": "type","type": "STRING", "mode": "NULLABLE"},
-                        {"name": "utmCampaign","type": "STRING", "mode": "NULLABLE"}
-
-                    ]
-                },
                 {"name": "occurredAt", "type": "TIMESTAMP", "mode": "NULLABLE"}
             ]
         },
@@ -54,26 +41,13 @@
                     {"name":  "source", "type": "STRING", "mode": "NULLABLE" },
                     {"name":  "term", "type": "STRING", "mode": "NULLABLE" }
                 ]},
-                {"name": "marketingEvent", "type": "STRING", "mode": "NULLABLE",
-                    "fields": [
-                        {"name": "channel", "type": "STRING", "mode": "NULLABLE"},
-                        {"name": "id","type": "STRING", "mode": "NULLABLE"},
-                        {"name": "type","type": "STRING", "mode": "NULLABLE"},
-                        {"name": "utmCampaign","type": "STRING", "mode": "NULLABLE"}
-
-                    ]
-                },
                 {"name": "occurredAt", "type": "TIMESTAMP", "mode": "NULLABLE"}
             ]
-        },
-//        {"name": "moments","type":"", "mode":""},
-//        ??
-
+        }
     ]},
     {"name": "totalPriceSet", "type": "FLOAT", "mode": "NULLABLE"},
     {"name": "subtotalPriceSet", "type": "FLOAT", "mode": "NULLABLE"},
     {"name": "totalDiscountsSet", "type": "FLOAT", "mode": "NULLABLE"},
-    {"name": "discountCode", "type": "STRING", "mode": "NULLABLE"},
     {"name": "totalRefundedSet", "type": "FLOAT", "mode": "NULLABLE"},
     {"name":  "taxLines", "type": "RECORD", "mode":  "REPEATED",
         "fields": [
@@ -81,13 +55,11 @@
             {"name": "priceSet", "type": "FLOAT", "mode": "NULLABLE"}
         ]
     },
-    {"name": "subtotalLineItemsQuantity", "type": "FLOAT", "mode": "NULLABLE"},
-    {"name": "cartDiscountAmountSet", "type": "FLOAT", "mode": "NULLABLE"},
+    {"name": "subtotalLineItemsQuantity", "type": "INTEGER", "mode": "NULLABLE"},
     {"name": "cancelledAt", "type": "TIMESTAMP", "mode": "NULLABLE"},
     {"name": "cancelReason", "type": "STRING", "mode": "NULLABLE"},
     {"name": "closed", "type": "BOOLEAN", "mode": "NULLABLE"},
     {"name": "closedAt", "type": "TIMESTAMP", "mode": "NULLABLE"},
-    {"name": "currencyCode", "type": "STRING", "mode": "NULLABLE"},
     {"name": "presentmentCurrencyCode", "type": "STRING", "mode": "NULLABLE"},
     {"name":  "shippingAddress", "type": "RECORD", "mode": "NULLABLE",
         "fields": [
@@ -96,23 +68,6 @@
             {"name": "longitude", "type": "FLOAT", "mode": "NULLABLE"},
             {"name": "latitude", "type": "FLOAT", "mode": "NULLABLE"},
             {"name": "provinceCode", "type": "STRING", "mode": "NULLABLE"}
-        ]
-    },
-    {"name": "shippingLine", "type": "RECORD", "mode": "REPEATED",
-        "fields": [
-            {"name": "id", "type": "STRING","mode": "NULLABLE"},
-            {"name": "code", "type": "STRING","mode": "NULLABLE"},
-            {"name": "title", "type": "STRING","mode": "NULLABLE"},
-            {"name": "carrierIdentifier", "type": "STRING","mode": "NULLABLE"},
-            {"name": "originalPriceSet", "type": "FLOAT","mode": "NULLABLE"},
-            {"name": "taxLines", "type": "RECORD","mode": "REPEATED",
-                "fields": [
-                    {"name": "priceSet","type":"FLOAT", "mode":"NULLABLE"},
-                    {"name": "rate", "type": "FLOAT","mode": "NULLABLE"},
-                    {"name": "ratePercentage","type":"FLOAT", "mode":"NULLABLE"}
-                ]
-            }
-
         ]
     }
 ]

@@ -9,25 +9,16 @@
   {"name": "email", "type": "STRING", "mode": "NULLABLE"},
   {"name": "validEmailAddress", "type":"BOOLEAN", "mode": "NULLABLE"},
   {"name": "phone", "type": "STRING", "mode": "NULLABLE"},
-  {"name": "tags", "type": "STRING","mode": "NULLABLE"},
   {"name": "state", "type": "STRING", "mode": "NULLABLE"},
-  {"name": "statistics", "type": "STRING", "mode": "NULLABLE"},
-  {"name": "market",
-    "type": "RECORD",
-    "mode": "NULLABLE",
+  {"name": "statistics", "type": "RECORD", "mode": "NULLABLE",
     "fields": [
-      {"name": "id", "type": "STRING","mode": "NULLABLE"},
-      {"name": "name", "type": "STRING", "mode":  "NULLABLE"},
-      {"name": "handle", "type": "STRING", "mode": "NULLABLE"},
-      {"name": "enabled", "type": "BOOLEAN", "mode": "NULLABLE"},
-      {"name": "primary", "type": "BOOLEAN", "mode":  "NULLABLE"}
-    ]
-  },
+      {"name": "predictedSpendTier", "type": "STRING", "mode": "NULLABLE"}
+    ]},
   {"name": "taxExempt", "type": "BOOLEAN", "mode": "NULLABLE"},
   {
     "name": "defaultAddress",
     "type":"RECORD",
-    "mode": "REPEATED",
+    "mode": "NULLABLE",
     "fields": [
       {"name": "address1", "type": "STRING", "mode": "NULLABLE"},
       {"name": "address2", "type": "STRING", "mode": "NULLABLE"},
