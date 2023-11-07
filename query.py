@@ -79,7 +79,6 @@ GET_ALL_ORDERS_QUERY = """
                 }
                 occurredAt
             }
-            ready
             moments (first: 20) {
                 edges {
                     node {
@@ -89,12 +88,6 @@ GET_ALL_ORDERS_QUERY = """
                     }
                 }
             }
-        }
-        app {
-          id
-        }
-        customer {
-          id
         }
         totalPriceSet {
           shopMoney {
@@ -111,6 +104,7 @@ GET_ALL_ORDERS_QUERY = """
             amount
           }
         }
+        discountCode
         totalRefundedSet {
           shopMoney {
             amount
@@ -138,6 +132,18 @@ GET_ALL_ORDERS_QUERY = """
             longitude
             latitude
             provinceCode
+        }
+        shippingLine {
+            id
+            code
+            title
+            carrierIdentifier
+            originalPriceSet
+            taxLines {
+                priceSet
+                rate
+                ratePercentage
+            }
         }
         discountApplications(first: 10) {
           edges {

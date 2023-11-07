@@ -15,7 +15,6 @@
         {"name": "customerOrderIndex", "type": "INTEGER", "mode": "NULLABLE"},
         {"name": "momentsCount", "type": "INTEGER", "mode": "NULLABLE"},
         {"name": "ready", "type": "BOOLEAN", "mode": "NULLABLE"},
-//what is this? ^
         {"name": "firstVisit", "type": "RECORD", "mode": "NULLABLE",
             "fields": [
                 {"name": "id", "type": "STRING", "mode": "REQUIRED"},
@@ -30,8 +29,15 @@
                     {"name":  "source", "type": "STRING", "mode": "NULLABLE" },
                     {"name":  "term", "type": "STRING", "mode": "NULLABLE" }
                 ]},
-                {"name": "marketingEvent", "type": "STRING", "mode": "NULLABLE"},
-                // include channel, id, type, utmCampaign?
+                {"name": "marketingEvent", "type": "STRING", "mode": "NULLABLE",
+                    "fields": [
+                        {"name": "channel", "type": "STRING", "mode": "NULLABLE"},
+                        {"name": "id","type": "STRING", "mode": "NULLABLE"},
+                        {"name": "type","type": "STRING", "mode": "NULLABLE"},
+                        {"name": "utmCampaign","type": "STRING", "mode": "NULLABLE"}
+
+                    ]
+                },
                 {"name": "occurredAt", "type": "TIMESTAMP", "mode": "NULLABLE"}
             ]
         },
@@ -48,11 +54,21 @@
                     {"name":  "source", "type": "STRING", "mode": "NULLABLE" },
                     {"name":  "term", "type": "STRING", "mode": "NULLABLE" }
                 ]},
-                {"name": "marketingEvent", "type": "STRING", "mode": "NULLABLE"},
-            // include channel, id, type, utmCampaign?
+                {"name": "marketingEvent", "type": "STRING", "mode": "NULLABLE",
+                    "fields": [
+                        {"name": "channel", "type": "STRING", "mode": "NULLABLE"},
+                        {"name": "id","type": "STRING", "mode": "NULLABLE"},
+                        {"name": "type","type": "STRING", "mode": "NULLABLE"},
+                        {"name": "utmCampaign","type": "STRING", "mode": "NULLABLE"}
+
+                    ]
+                },
                 {"name": "occurredAt", "type": "TIMESTAMP", "mode": "NULLABLE"}
             ]
-        }
+        },
+//        {"name": "moments","type":"", "mode":""},
+//        ??
+
     ]},
     {"name": "totalPriceSet", "type": "FLOAT", "mode": "NULLABLE"},
     {"name": "subtotalPriceSet", "type": "FLOAT", "mode": "NULLABLE"},
@@ -81,8 +97,8 @@
             {"name": "latitude", "type": "FLOAT", "mode": "NULLABLE"},
             {"name": "provinceCode", "type": "STRING", "mode": "NULLABLE"}
         ]
-    }
-    {"name": "shippingLine", "type": "RECORD", "mode": "REPEATED"
+    },
+    {"name": "shippingLine", "type": "RECORD", "mode": "REPEATED",
         "fields": [
             {"name": "id", "type": "STRING","mode": "NULLABLE"},
             {"name": "code", "type": "STRING","mode": "NULLABLE"},
@@ -91,7 +107,9 @@
             {"name": "originalPriceSet", "type": "FLOAT","mode": "NULLABLE"},
             {"name": "taxLines", "type": "RECORD","mode": "REPEATED",
                 "fields": [
-                    {}
+                    {"name": "priceSet","type":"FLOAT", "mode":"NULLABLE"},
+                    {"name": "rate", "type": "FLOAT","mode": "NULLABLE"},
+                    {"name": "ratePercentage","type":"FLOAT", "mode":"NULLABLE"}
                 ]
             }
 
