@@ -19,7 +19,8 @@
                 {"name": "referrerUrl", "type": "STRING", "mode": "NULLABLE"},
                 {"name": "source", "type": "STRING", "mode": "NULLABLE"},
                 {"name": "sourceType", "type": "STRING", "mode": "NULLABLE"},
-                {"name": "utmParameters", "type": "RECORD", "mode": "NULLABLE", "fields": [
+                {"name": "utmParameters", "type": "RECORD", "mode": "NULLABLE",
+                    "fields": [
                     {"name":  "campaign", "type": "STRING", "mode": "NULLABLE" },
                     {"name":  "content", "type": "STRING", "mode": "NULLABLE" },
                     {"name":  "medium", "type": "STRING", "mode": "NULLABLE" },
@@ -35,7 +36,8 @@
                 {"name": "referrerUrl", "type": "STRING", "mode": "NULLABLE"},
                 {"name": "source", "type": "STRING", "mode": "NULLABLE"},
                 {"name": "sourceType", "type": "STRING", "mode": "NULLABLE"},
-                {"name": "utmParameters", "type": "RECORD", "mode": "NULLABLE", "fields": [
+                {"name": "utmParameters", "type": "RECORD", "mode": "NULLABLE",
+                    "fields": [
                     {"name":  "campaign", "type": "STRING", "mode": "NULLABLE" },
                     {"name":  "content", "type": "STRING", "mode": "NULLABLE" },
                     {"name":  "medium", "type": "STRING", "mode": "NULLABLE" },

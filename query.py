@@ -229,7 +229,8 @@ query customers {
         }
 }
 """
-GET_ALL_PRODUCTS_QUERY = """{
+GET_ALL_PRODUCTS_QUERY = """
+{
       products {
         edges {
           node {
