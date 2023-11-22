@@ -163,7 +163,7 @@ class OrderTransformer(ShopifyScheduledIngestionTransformer):
                 pass
             case _:
                 print(f"no routine found in get_orders() to handle the following type:: {row['__typename']}")
-                print(row)
+                # print(row)
         return row
 
 

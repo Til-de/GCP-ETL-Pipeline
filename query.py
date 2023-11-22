@@ -16,7 +16,7 @@ mutation bulk_product_query($subquery: String!)  {
 '''
 GET_ALL_ORDERS_QUERY = """
 {
-  orders {
+  orders  {
     edges {
       node {
         __typename
