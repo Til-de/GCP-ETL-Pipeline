@@ -99,7 +99,7 @@ class DataModel(ABC):
         table = bigquery.Table(table_id, schema=schema)
         # Create the table in BigQuery
         try:
-            self.client.create_table(table)
+            self.client.create_table(table, True)
             print(f"Table {table_id} created successfully.")
         except Exception as e:
             print(f"Error creating table {table_id}: {e}")

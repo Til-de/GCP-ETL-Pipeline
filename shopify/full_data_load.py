@@ -144,8 +144,19 @@ class OrderTransformer(ShopifyScheduledIngestionTransformer):
                 self.unpack_money_v2(row, "totalPriceSet")
                 self.unpack_money_v2(row, "totalDiscountsSet")
                 self.unpack_money_v2(row, "totalRefundedSet")
+                #Handling taxLines
                 for line in row["taxLines"]:
                     self.unpack_money_v2(line, "priceSet")
+                #Handling shippingLine
+                if "shippingLine" in row and isinstance(row["shippingLine"], dict):
+                    self.unpack_money_v2(row["shippingLine"], "discountedPriceSet")
+                    self.unpack_money_v2(row["shippingLine"], "originalPriceSet")
+
+                    if "taxLines" in row["shippingLine"] and isinstance(row["shippingLine"]["taxLines"], list):
+                        for tax_line in row["shippingLine"]["taxLines"]:
+                            self.unpack_money_v2(tax_line, "priceSet")
+
+
             case "shopify_customer_visits":
                 pass
             case "shopify_discount_application":

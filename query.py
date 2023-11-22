@@ -22,11 +22,21 @@ GET_ALL_ORDERS_QUERY = """
         __typename
         id
         createdAt
+        processedAt
         updatedAt
+        test
+        customerLocale
+        customer {
+            id
+        }
+        app {
+            id
+        }
         customerJourneySummary {
             daysToConversion
             customerOrderIndex
             momentsCount
+            ready
             firstVisit {
                 id
                 landingPage
@@ -41,13 +51,9 @@ GET_ALL_ORDERS_QUERY = """
                     source
                     term
                 }
-                marketingEvent {
-                    channel
-                    id
-                    type
-                    utmCampaign
-                }
+                occurredAt
             }
+            
              lastVisit {
                 id
                 landingPage
@@ -62,14 +68,8 @@ GET_ALL_ORDERS_QUERY = """
                     source
                     term
                 }
-                marketingEvent {
-                    channel
-                    id
-                    type
-                    utmCampaign
-                }
+                occurredAt
             }
-            ready
             moments (first: 20) {
                 edges {
                     node {
@@ -79,12 +79,6 @@ GET_ALL_ORDERS_QUERY = """
                     }
                 }
             }
-        }
-        app {
-          id
-        }
-        customer {
-          id
         }
         totalPriceSet {
           shopMoney {
@@ -114,6 +108,7 @@ GET_ALL_ORDERS_QUERY = """
             amount
           }
         }
+        fullyPaid
         subtotalLineItemsQuantity
         cancelledAt
         cancelReason
@@ -122,10 +117,35 @@ GET_ALL_ORDERS_QUERY = """
         presentmentCurrencyCode
         shippingAddress {
             countryCodeV2
-            provinceCode
+            city
             latitude
             longitude
-            city
+            provinceCode
+        }
+        shippingLine {
+            id
+            title
+            source
+            deliveryCategory
+            carrierIdentifier
+            discountedPriceSet {
+                shopMoney {
+                    amount
+                }
+            }
+            originalPriceSet {
+                shopMoney {
+                    amount
+                }
+            }
+            taxLines {
+                rate
+                priceSet {
+                    shopMoney {
+                        amount
+                    }
+                }
+            }
         }
         discountApplications(first: 10) {
           edges {
@@ -163,7 +183,17 @@ query customers {
                     lastName
                     email
                     phone
+                    locale
+                    state
+                    createdAt
+                    updatedAt
+                    taxExempt
+                    lifetimeDuration
+                    statistics {
+                        predictedSpendTier
+                    }
                     addresses {
+                        id
                         address1
                         address2
                         city
@@ -174,8 +204,14 @@ query customers {
                         province
                         provinceCode
                         timeZone
+                        zip
                     }
                     emailMarketingConsent {
+                        consentUpdatedAt
+                        marketingState
+                        marketingOptInLevel
+                    }
+                    smsMarketingConsent {
                         consentUpdatedAt
                         marketingState
                         marketingOptInLevel
