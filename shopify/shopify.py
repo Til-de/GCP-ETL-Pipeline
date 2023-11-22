@@ -64,11 +64,17 @@ class ShopifyTransformer(Transformer):
             row[prop] = id
 
     def unpack_money_v2(self, root: dict, prop: str):
-        if root[prop]:
-            if root[prop]["shopMoney"]:
-                root[prop] = root[prop]["shopMoney"]["amount"]
-            elif root[prop]["presentmentMoney"]:
-                root[prop] = root[prop]["presentmentMoney"]["amount"]
+        try:
+            if root[prop]:
+                if root[prop]["shopMoney"]:
+                    root[prop] = root[prop]["shopMoney"]["amount"]
+                elif root[prop]["presentmentMoney"]:
+                    root[prop] = root[prop]["presentmentMoney"]["amount"]
+        except KeyError as e:
+            print(f"KeyError: {e}")
+        except Exception as e:
+            print(f"Error: {e}")
+
 
     @abstractmethod
     def process_batched_data(self, data):
