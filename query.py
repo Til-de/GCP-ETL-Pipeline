@@ -16,7 +16,7 @@ mutation bulk_product_query($subquery: String!)  {
 '''
 GET_ALL_ORDERS_QUERY = """
 {
-  orders {
+  orders  {
     edges {
       node {
         __typename
@@ -24,12 +24,13 @@ GET_ALL_ORDERS_QUERY = """
         createdAt
         processedAt
         updatedAt
+        test
         customerLocale
-        app {
-          id
-        }
         customer {
-          id
+            id
+        }
+        app {
+            id
         }
         customerJourneySummary {
             daysToConversion
@@ -52,6 +53,7 @@ GET_ALL_ORDERS_QUERY = """
                 }
                 occurredAt
             }
+            
              lastVisit {
                 id
                 landingPage
@@ -78,7 +80,6 @@ GET_ALL_ORDERS_QUERY = """
                 }
             }
         }
-
         totalPriceSet {
           shopMoney {
             amount
@@ -88,6 +89,14 @@ GET_ALL_ORDERS_QUERY = """
           shopMoney {
             amount
           } 
+        }
+        taxLines {
+          rate
+          priceSet {
+            shopMoney {
+              amount
+            }
+          }
         }
         totalDiscountsSet {
           shopMoney {
@@ -99,14 +108,7 @@ GET_ALL_ORDERS_QUERY = """
             amount
           }
         }
-        taxLines {
-          rate
-          priceSet {
-            shopMoney {
-              amount
-            }
-          }
-        }
+        fullyPaid
         subtotalLineItemsQuantity
         cancelledAt
         cancelReason
@@ -115,10 +117,35 @@ GET_ALL_ORDERS_QUERY = """
         presentmentCurrencyCode
         shippingAddress {
             countryCodeV2
-            provinceCode
+            city
             latitude
             longitude
-            city
+            provinceCode
+        }
+        shippingLine {
+            id
+            title
+            source
+            deliveryCategory
+            carrierIdentifier
+            discountedPriceSet {
+                shopMoney {
+                    amount
+                }
+            }
+            originalPriceSet {
+                shopMoney {
+                    amount
+                }
+            }
+            taxLines {
+                rate
+                priceSet {
+                    shopMoney {
+                        amount
+                    }
+                }
+            }
         }
         discountApplications(first: 10) {
           edges {
@@ -152,43 +179,26 @@ query customers {
                 node {
                     __typename
                     id
-                    createdAt
-                    updatedAt
-                    lifetimeDuration
-                    locale
                     firstName
                     lastName
                     email
-                    validEmailAddress
                     phone
+                    locale
                     state
+                    createdAt
+                    updatedAt
+                    taxExempt
+                    lifetimeDuration
                     statistics {
                         predictedSpendTier
                     }
-                    taxExempt
-                    defaultAddress {
-                        address1
-                        address2
-                        city
-                        company
-                        coordinatesValidated
-                        countryCodeV2
-                        country
-                        latitude
-                        longitude
-                        province
-                        provinceCode
-                        timeZone
-                        zip
-                    }
                     addresses {
+                        id
                         address1
                         address2
                         city
                         company
-                        coordinatesValidated
                         countryCodeV2
-                        country
                         latitude
                         longitude
                         province
@@ -219,7 +229,8 @@ query customers {
         }
 }
 """
-GET_ALL_PRODUCTS_QUERY = """{
+GET_ALL_PRODUCTS_QUERY = """
+{
       products {
         edges {
           node {
@@ -258,8 +269,6 @@ GET_ALL_PRODUCTS_QUERY = """{
                   inventoryQuantity
                   price
                   compareAtPrice
-                  availableForSale
-                  updatedAt
                 }
               }
             }

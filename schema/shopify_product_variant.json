@@ -7,5 +7,5 @@
   {"name": "compareAtPrice", "type": "STRING", "mode": "NULLABLE"},
   {"name":"__parentId", "type":  "STRING", "mode":  "REQUIRED"},
   {"name": "availableForSale", "type":"BOOLEAN", "mode": "NULLABLE"},
-  {"name": "updatedAd", "type": "TIMESTAMP", "mode": "NULLABLE"}
+  {"name": "updatedAt", "type": "TIMESTAMP", "mode": "NULLABLE"}
 ]
