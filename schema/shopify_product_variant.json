@@ -5,5 +5,7 @@
   {"name": "inventoryQuantity", "type": "INTEGER", "mode": "NULLABLE"},
   {"name": "price", "type": "FLOAT", "mode": "NULLABLE"},
   {"name": "compareAtPrice", "type": "STRING", "mode": "NULLABLE"},
-  {"name":"__parentId", "type":  "STRING", "mode":  "REQUIRED"}
+  {"name":"__parentId", "type":  "STRING", "mode":  "REQUIRED"},
+  {"name": "availableForSale", "type":"BOOLEAN", "mode": "NULLABLE"},
+  {"name": "updatedAt", "type": "TIMESTAMP", "mode": "NULLABLE"}
 ]

@@ -1,61 +1,30 @@
 [
   {"name": "id", "type": "STRING", "mode": "REQUIRED"},
-  {"name": "createdAt", "type":"TIMESTAMP", "mode": "NULLABLE"},
-  {"name": "updatedAt", "type":"TIMESTAMP", "mode": "NULLABLE"},
-  {"name": "lifetimeDuration", "type": "STRING", "mode":"NULLABLE"},
-  {"name": "locale", "type": "STRING", "mode":"NULLABLE"},
   {"name": "firstName", "type": "STRING", "mode": "NULLABLE"},
   {"name": "lastName", "type": "STRING", "mode": "NULLABLE"},
   {"name": "email", "type": "STRING", "mode": "NULLABLE"},
-  {"name": "validEmailAddress", "type":"BOOLEAN", "mode": "NULLABLE"},
   {"name": "phone", "type": "STRING", "mode": "NULLABLE"},
-  {"name": "tags", "type": "STRING","mode": "NULLABLE"},
+  {"name": "locale", "type": "STRING", "mode": "NULLABLE"},
   {"name": "state", "type": "STRING", "mode": "NULLABLE"},
-  {"name": "statistics", "type": "STRING", "mode": "NULLABLE"},
-  {"name": "market",
-    "type": "RECORD",
-    "mode": "NULLABLE",
-    "fields": [
-      {"name": "id", "type": "STRING","mode": "NULLABLE"},
-      {"name": "name", "type": "STRING", "mode":  "NULLABLE"},
-      {"name": "handle", "type": "STRING", "mode": "NULLABLE"},
-      {"name": "enabled", "type": "BOOLEAN", "mode": "NULLABLE"},
-      {"name": "primary", "type": "BOOLEAN", "mode":  "NULLABLE"}
-    ]
-  },
+  {"name": "createdAt", "type": "TIMESTAMP", "mode": "NULLABLE"},
+  {"name": "updatedAt", "type": "TIMESTAMP", "mode": "NULLABLE"},
   {"name": "taxExempt", "type": "BOOLEAN", "mode": "NULLABLE"},
-  {
-    "name": "defaultAddress",
-    "type":"RECORD",
-    "mode": "REPEATED",
-    "fields": [
-      {"name": "address1", "type": "STRING", "mode": "NULLABLE"},
-      {"name": "address2", "type": "STRING", "mode": "NULLABLE"},
-      {"name": "city", "type": "STRING", "mode": "NULLABLE"},
-      {"name": "company", "type": "STRING", "mode": "NULLABLE"},
-      {"name": "coordinatesValidated", "type":"BOOLEAN", "mode": "NULLABLE"},
-      {"name": "countryCodeV2", "type": "STRING", "mode": "NULLABLE"},
-      {"name": "country", "type":"STRING", "mode": "NULLABLE"},
-      {"name": "latitude", "type": "FLOAT", "mode": "NULLABLE"},
-      {"name": "longitude", "type": "FLOAT", "mode": "NULLABLE"},
-      {"name": "province", "type": "STRING", "mode": "NULLABLE"},
-      {"name": "provinceCode", "type": "STRING", "mode": "NULLABLE"},
-      {"name": "timeZone", "type": "STRING", "mode": "NULLABLE"},
-      {"name": "zip", "type": "STRING", "mode": "NULLABLE"}
-    ]
-  },
+  {"name": "lifetimeDuration", "type": "STRING", "mode": "NULLABLE"},
+  {"name": "statistics", "type": "RECORD", "mode": "NULLABLE",
+    "fields":  [
+        {"name": "predictedSpendTier", "type": "STRING", "mode": "NULLABLE"}
+    ]},
   {
     "name": "addresses",
     "type": "RECORD",
     "mode": "REPEATED",
     "fields": [
+      {"name": "id", "type": "STRING", "mode": "REQUIRED"},
       {"name": "address1", "type": "STRING", "mode": "NULLABLE"},
       {"name": "address2", "type": "STRING", "mode": "NULLABLE"},
       {"name": "city", "type": "STRING", "mode": "NULLABLE"},
       {"name": "company", "type": "STRING", "mode": "NULLABLE"},
-      {"name": "coordinatesValidated", "type":"BOOLEAN", "mode": "NULLABLE"},
       {"name": "countryCodeV2", "type": "STRING", "mode": "NULLABLE"},
-      {"name": "country", "type":"STRING", "mode": "NULLABLE"},
       {"name": "latitude", "type": "FLOAT", "mode": "NULLABLE"},
       {"name": "longitude", "type": "FLOAT", "mode": "NULLABLE"},
       {"name": "province", "type": "STRING", "mode": "NULLABLE"},
@@ -75,7 +44,7 @@
     ]
   },
   {
-    "name":"smsMarketingConsent",
+    "name": "smsMarketingConsent",
     "type": "RECORD",
     "mode": "NULLABLE",
     "fields": [

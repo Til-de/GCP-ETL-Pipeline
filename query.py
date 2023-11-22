@@ -16,7 +16,7 @@ mutation bulk_product_query($subquery: String!)  {
 '''
 GET_ALL_ORDERS_QUERY = """
 {
-  orders {
+  orders  {
     edges {
       node {
         __typename
@@ -24,11 +24,19 @@ GET_ALL_ORDERS_QUERY = """
         createdAt
         processedAt
         updatedAt
+        test
         customerLocale
+        customer {
+            id
+        }
+        app {
+            id
+        }
         customerJourneySummary {
             daysToConversion
             customerOrderIndex
             momentsCount
+            ready
             firstVisit {
                 id
                 landingPage
@@ -43,13 +51,9 @@ GET_ALL_ORDERS_QUERY = """
                     source
                     term
                 }
-                marketingEvent {
-                    channel
-                    id
-                    type
-                    utmCampaign
-                }
+                occurredAt
             }
+            
              lastVisit {
                 id
                 landingPage
@@ -64,14 +68,8 @@ GET_ALL_ORDERS_QUERY = """
                     source
                     term
                 }
-                marketingEvent {
-                    channel
-                    id
-                    type
-                    utmCampaign
-                }
+                occurredAt
             }
-            ready
             moments (first: 20) {
                 edges {
                     node {
@@ -81,12 +79,6 @@ GET_ALL_ORDERS_QUERY = """
                     }
                 }
             }
-        }
-        app {
-          id
-        }
-        customer {
-          id
         }
         totalPriceSet {
           shopMoney {
@@ -116,6 +108,7 @@ GET_ALL_ORDERS_QUERY = """
             amount
           }
         }
+        fullyPaid
         subtotalLineItemsQuantity
         cancelledAt
         cancelReason
@@ -124,10 +117,35 @@ GET_ALL_ORDERS_QUERY = """
         presentmentCurrencyCode
         shippingAddress {
             countryCodeV2
-            provinceCode
+            city
             latitude
             longitude
-            city
+            provinceCode
+        }
+        shippingLine {
+            id
+            title
+            source
+            deliveryCategory
+            carrierIdentifier
+            discountedPriceSet {
+                shopMoney {
+                    amount
+                }
+            }
+            originalPriceSet {
+                shopMoney {
+                    amount
+                }
+            }
+            taxLines {
+                rate
+                priceSet {
+                    shopMoney {
+                        amount
+                    }
+                }
+            }
         }
         discountApplications(first: 10) {
           edges {
@@ -161,49 +179,26 @@ query customers {
                 node {
                     __typename
                     id
-                    createdAt
-                    updatedAt
-                    lifetimeDuration
-                    locale
                     firstName
                     lastName
                     email
-                    validEmailAddress
                     phone
-                    tags
+                    locale
                     state
-                    statistics
-                    market {
-                        id
-                        name
-                        handle
-                        enabled
-                        primary
-                    }
+                    createdAt
+                    updatedAt
                     taxExempt
-                    defaultAddress {
-                        address1
-                        address2
-                        city
-                        company
-                        coordinatesValidated
-                        countryCodeV2
-                        country
-                        latitude
-                        longitude
-                        province
-                        provinceCode
-                        timeZone
-                        zip
+                    lifetimeDuration
+                    statistics {
+                        predictedSpendTier
                     }
                     addresses {
+                        id
                         address1
                         address2
                         city
                         company
-                        coordinatesValidated
                         countryCodeV2
-                        country
                         latitude
                         longitude
                         province
@@ -234,7 +229,8 @@ query customers {
         }
 }
 """
-GET_ALL_PRODUCTS_QUERY = """{
+GET_ALL_PRODUCTS_QUERY = """
+{
       products {
         edges {
           node {
@@ -273,8 +269,6 @@ GET_ALL_PRODUCTS_QUERY = """{
                   inventoryQuantity
                   price
                   compareAtPrice
-                  availableForSale
-                  updatedAt
                 }
               }
             }
