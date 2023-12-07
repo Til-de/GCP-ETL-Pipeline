@@ -1,5 +1,6 @@
 [
     {"name": "id", "type": "STRING", "mode": "REQUIRED"},
+    {"name": "name", "type": "STRING", "mode": "NULLABLE"},
     {"name": "createdAt", "type": "TIMESTAMP", "mode": "NULLABLE"},
     {"name": "processedAt", "type": "TIMESTAMP", "mode": "NULLABLE"},
     {"name": "updatedAt", "type": "TIMESTAMP", "mode": "NULLABLE"},
@@ -59,6 +60,11 @@
     {"name": "totalDiscountsSet", "type": "FLOAT", "mode": "NULLABLE"},
     {"name": "totalRefundedSet", "type": "FLOAT", "mode": "NULLABLE"},
     {"name": "fullyPaid", "type": "BOOLEAN", "mode": "NULLABLE"},
+    {"name": "merchantOfRecordApp", "type": "RECORD", "mode": "NULLABLE",
+        "fields": [
+            {"name": "id", "type": "STRING", "mode": "NULLABLE"},
+            {"name": "name", "type": "STRING", "mode": "NULLABLE"}
+        ]},
     {"name": "subtotalLineItemsQuantity", "type": "INTEGER", "mode": "NULLABLE"},
     {"name": "cancelledAt", "type": "TIMESTAMP", "mode": "NULLABLE"},
     {"name": "cancelReason", "type": "STRING", "mode": "NULLABLE"},

@@ -32,7 +32,8 @@ def main():
         extractor.migrate(tables)
         match endpoint:
             case "ORDERS":
-                url = extractor.get_data(GET_ALL_ORDERS_QUERY)
+                # url = extractor.get_data(GET_ALL_ORDERS_QUERY)
+                url = "https://storage.googleapis.com/shopify-tiers-assets-prod-us-east1/p21nc7ofzp18fobxk4tb2n3b1gcp?GoogleAccessId=assets-us-prod%40shopify-tiers.iam.gserviceaccount.com&Expires=1702583763&Signature=nVxTB95aXNiz9LdlSCRxazMm9KN2YX%2BVYsVreemCCvyswLdgEl0GK1vq85MbGev3U0h%2BggmB7Hm%2BuDxG7qmTmsVeTH5vkywb8PBlrXoom3uFl5uL14qnMplCV%2Fs7iaZPGH1%2FK6%2FmK2tGzHtInSqT5DCP%2BPEe1qKSpHjNM0eR2BGJxk7jl3oBvlRYFfiILNt9c5JhjW0QVs5AlXm9PNv1pFphdd2%2Bxmls28giw81qU8L3w96k3JyYsXGXt5ml8CmdOcMGtjfybAcRpSsYqSLN9cVaZi83TBmwgbh1cfwdQDRk%2FPbfLCZB3MH3EjReX9tsVtBnl9cGVFCfBIanwLHrZw%3D%3D&response-content-disposition=attachment%3B+filename%3D%22bulk-3889269211374.jsonl%22%3B+filename%2A%3DUTF-8%27%27bulk-3889269211374.jsonl&response-content-type=application%2Fjsonl"
                 transformer = OrderTransformer(tables, 5000)
             case "CUSTOMERS":
                 url = extractor.get_data(GET_ALL_CUSTOMERS_QUERY)
@@ -147,6 +148,7 @@ class OrderTransformer(ShopifyScheduledIngestionTransformer):
                 #Handling taxLines
                 for line in row["taxLines"]:
                     self.unpack_money_v2(line, "priceSet")
+
                 #Handling shippingLine
                 if "shippingLine" in row and isinstance(row["shippingLine"], dict):
                     self.unpack_money_v2(row["shippingLine"], "discountedPriceSet")
@@ -161,6 +163,9 @@ class OrderTransformer(ShopifyScheduledIngestionTransformer):
                 pass
             case "shopify_discount_application":
                 pass
+            case "shopify_line_items":
+                self.unpack_money_v2(row, "originalUnitPriceSet")
+
             case _:
                 print(f"no routine found in get_orders() to handle the following type:: {row['__typename']}")
                 # print(row)
