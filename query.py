@@ -16,11 +16,12 @@ mutation bulk_product_query($subquery: String!)  {
 '''
 GET_ALL_ORDERS_QUERY = """
 {
-  orders  {
+  orders (first: 5, query: "created_at:>=2020-01-01")  {
     edges {
       node {
         __typename
         id
+        name
         createdAt
         processedAt
         updatedAt
@@ -109,6 +110,10 @@ GET_ALL_ORDERS_QUERY = """
           }
         }
         fullyPaid
+        merchantOfRecordApp {
+            id
+            name
+        }
         subtotalLineItemsQuantity
         cancelledAt
         cancelReason
@@ -167,10 +172,37 @@ GET_ALL_ORDERS_QUERY = """
             }
           }
         }
+        lineItem(first: 20) {
+          edges {
+            node {
+              __typename  
+              id
+              name
+              sku
+              product {
+                id
+                }
+              title
+              originalUnitPriceSet {
+                shopMoney {
+                    amount
+                }
+              }
+              variant {
+                id
+                title
+                sku
+              }
+              variantTitle
+              quantity
+              }
+            }
+          }
+        }
       }
     }
   }
-}
+
 """
 GET_ALL_CUSTOMERS_QUERY = """
 query customers {
@@ -229,6 +261,7 @@ query customers {
         }
 }
 """
+
 GET_ALL_PRODUCTS_QUERY = """
 {
       products {
@@ -277,6 +310,7 @@ GET_ALL_PRODUCTS_QUERY = """
       }
     }
     """
+
 BULK_OPERATION_STATUS = """
 {
  currentBulkOperation {
@@ -290,7 +324,9 @@ BULK_OPERATION_STATUS = """
    url
    partialDataUrl
  }
-}"""
+}
+"""
+
 BULK_OPERATION_STATUS_BY_ID = """query BulkOperationStatusById($id: ID!) {
   node(id: $id) {
     ... on BulkOperation {

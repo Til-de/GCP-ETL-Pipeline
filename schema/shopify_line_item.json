@@ -1,0 +1,21 @@
+[
+    {"name":"__parentId", "type":  "STRING", "mode":  "REQUIRED"},
+    {"name": "id", "type": "STRING", "mode": "REQUIRED"},
+    {"name": "name", "type": "STRING", "mode": "NULLABLE"},
+    {"name": "sku", "type": "STRING", "mode": "NULLABLE"},
+    {"name": "product", "type": "RECORD", "mode": "NULLABLE",
+      "fields": [
+        {"name": "id", "type": "STRING", "mode": "NULLABLE"}
+      ]},
+    {"name": "title", "type": "STRING", "mode": "NULLABLE"},
+    {"name": "originalUnitPriceSet", "type":"FLOAT", "mode": "NULLABLE"},
+    {"name": "variant", "type": "RECORD", "mode": "NULLABLE",
+      "fields": [
+        {"name": "id", "type":"STRING", "mode": "REQUIRED"},
+        {"name": "title", "type":"STRING", "mode": "NULLABLE"},
+        {"name": "sku", "type":"STRING", "mode": "NULLABLE"}
+      ]},
+    {"name": "variantTitle", "type":"STRING", "mode": "NULLABLE"},
+    {"name": "quantity", "type": "INTEGER", "mode": "NULLABLE"}
+
+]
